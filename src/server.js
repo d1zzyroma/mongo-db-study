@@ -18,13 +18,20 @@ const setupServer = () => {
 
     app.use(contactsRouter);
 
-    app.use((req, res) => {
+    app.use('*', (req, res, next) => {
         res.status(404).json({
-            message: "Not Found"
+          message: 'Not found',
         });
     });
 
-    const PORT = process.env.PORT || 3001;
+    app.use((err, req, res, next) => {
+        res.status(500).json({
+          message: 'Something went wrong',
+          error: err.message,
+        });
+      });
+
+    const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
     });
