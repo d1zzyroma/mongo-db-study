@@ -1,10 +1,27 @@
 import createHttpError from "http-errors";
 import { contactsCollection } from "../db/models/contacts.js";
+import { calculatePaginationData } from '../utils/calculatePaginationData.js';
+import { SORT_ORDER } from "../constants/index.js";
 
-export const getAllContacts = async () => {
-    const contacts = await contactsCollection.find();
-    return contacts;
+export const getAllContacts = async (page, perPage, sortOrder = SORT_ORDER.ASC, sortBy = '_id') => {
+    const limit = perPage;
+    const skip = (page - 1) * perPage;
+
+    const contactsQuery = contactsCollection.find().sort({ [sortBy]: sortOrder === SORT_ORDER.ASC ? 1 : -1 });
+
+    const contactsCount = await contactsQuery.clone().countDocuments();
+
+    const contacts = await contactsQuery.skip(skip).limit(limit).exec();
+
+    const paginationData = calculatePaginationData(contactsCount, perPage, page);
+
+    return {
+        data: contacts,
+        ...paginationData,
+    };
 };
+
+
 
 export const getContactsById = async (contactId) => {
     const contact = await contactsCollection.findById(contactId);
