@@ -49,24 +49,25 @@ export const getContactsByIdController = async (req, res, next) => {
 };
 
 export const deleteContactByIdController = async (req, res, next) => {
-    try{
+    try {
         const { contactId } = req.params;
 
         const contact = await deleteContactById(contactId);
 
-
         if (!contact) {
             throw createHttpError(404, `Contact with id - ${contactId} not Found`);
         }
-        res.status(204).send();
+        
+        res.status(204).send();  
 
-    }catch(err){
-        if(err.message.includes("Cast to ObjectId failed")){
+    } catch (err) {
+        if (err.message.includes("Cast to ObjectId failed")) {
             err.status = 404;
         }
         next(err);
     }
 };
+
 
 export const createContactController = async(req, res) => {
     

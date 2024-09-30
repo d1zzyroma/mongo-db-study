@@ -29,8 +29,15 @@ export const getContactsById = async (contactId) => {
 };
 
 export const deleteContactById = async (id) => {
-    await contactsCollection.findByIdAndDelete(id);
+    const deletedContact = await contactsCollection.findByIdAndDelete(id);
+    
+    if (!deletedContact) {
+        throw createHttpError(404, `Contact with id - ${id} not Found`);
+    }
+    
+    return deletedContact;
 };
+
 
 export const createContact = async (payload) => {
     return await contactsCollection.create(payload);
