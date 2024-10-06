@@ -4,7 +4,7 @@ import { createContact, deleteContactById, getAllContacts, getContactsById, upda
 import createHttpError from 'http-errors';
 import { parsePaginationParams } from "../utils/parsePaginationParams.js";
 import { parseSortParams } from "../utils/parseSortParams.js";
-import { registerUser } from "../services/auth.js";
+
 
 export const getContactsController = async (req, res, next) => {
     try {
@@ -94,12 +94,3 @@ export const patchContactController = async (req, res, next) => {
     });
 };
 
-export const registerUserController = async (req, res) => {
-    const user = registerUser(req.body);
-
-    res.status(201).json({
-        status: 201,
-        message: 'Successfully registered a user!',
-        data: user,
-    });
-};
