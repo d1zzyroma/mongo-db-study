@@ -10,9 +10,9 @@ export const getContactsController = async (req, res, next) => {
     try {
         const { page, perPage } = parsePaginationParams(req.query);
         const { sortBy, sortOrder } = parseSortParams(req.query);
+        const { _id: userId } = req.user;  
         
-        
-        const contacts = await getAllContacts(page, perPage, sortOrder, sortBy);
+        const contacts = await getAllContacts(userId, page, perPage, sortOrder, sortBy);
 
         res.status(200).json({
             status: 200,
@@ -26,41 +26,40 @@ export const getContactsController = async (req, res, next) => {
 
 
 export const getContactsByIdController = async (req, res, next) => {
-    try{
+    try {
         const { contactId } = req.params;
-        const contact = await getContactsById(contactId);
-        
+        const { _id: userId } = req.user;  
+        const contact = await getContactsById(contactId, userId);  
 
         if (!contact) {
             throw createHttpError(404, `Contact with id - ${contactId} not Found`);
         }
-      
+
         res.status(200).json({
-          status: 200,
-          message: `Successfully found contact with id ${contactId}!`,
-          data: contact,
+            status: 200,
+            message: `Successfully found contact with id ${contactId}!`,
+            data: contact,
         });
-    }catch(err){
-        if(err.message.includes("Cast to ObjectId failed")){
+    } catch (err) {
+        if (err.message.includes("Cast to ObjectId failed")) {
             err.status = 404;
         }
         next(err);
     }
-
 };
 
 export const deleteContactByIdController = async (req, res, next) => {
     try {
         const { contactId } = req.params;
+        const { _id: userId } = req.user;  
 
-        const contact = await deleteContactById(contactId);
+        const contact = await deleteContactById(contactId, userId);  
 
         if (!contact) {
             throw createHttpError(404, `Contact with id - ${contactId} not Found`);
         }
-        
-        res.status(204).send();  
 
+        res.status(204).send();
     } catch (err) {
         if (err.message.includes("Cast to ObjectId failed")) {
             err.status = 404;
@@ -70,27 +69,28 @@ export const deleteContactByIdController = async (req, res, next) => {
 };
 
 
-export const createContactController = async(req, res) => {
-    
-    const contacts = await createContact(req.body);
+export const createContactController = async (req, res) => {
+    const { _id: userId } = req.user;  
+    const payload = { ...req.body, userId };  
 
-    res.status(201).json({
-        status: 201,
-        message: "Successfully created contact!",
-        data: contacts,
-      });
+    const newContact = await createContact(payload);
+
+    res.status(201).json(newContact);
 };
+
 
 export const patchContactController = async (req, res, next) => {
     const { contactId } = req.params;
     const { body } = req;
+    const { _id: userId } = req.user;  
 
-    const contacts = await updateContact( contactId, body);
-    
+    const contacts = await updateContact(contactId, userId, body);  
+
     res.status(200).json({
         status: 200,
         message: "Successfully patched a contact!",
         data: contacts,
     });
 };
+
 
