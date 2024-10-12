@@ -1,7 +1,7 @@
-// src/controllers/auth.js
 
 import { refreshUsersSession, registerUser, loginUser, logoutUser } from '../services/auth.js';
 import { ONE_DAY } from "../constants/index.js";
+import { resetPassword } from '../services/auth.js';
 
 
 const setupSession = (res, session) => {
@@ -100,3 +100,11 @@ export const requestResetEmailController = async (req, res) => {
   });
 };
 
+export const resetPasswordController = async (req, res) => {
+  await resetPassword(req.body);
+  res.json({
+    message: 'Password was successfully reset!',
+    status: 200,
+    data: {},
+  });
+};
