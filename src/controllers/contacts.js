@@ -4,6 +4,9 @@ import { createContact, deleteContactById, getAllContacts, getContactsById, upda
 import createHttpError from 'http-errors';
 import { parsePaginationParams } from "../utils/parsePaginationParams.js";
 import { parseSortParams } from "../utils/parseSortParams.js";
+import { saveFileToUploadDir } from "../utils/saveFileToUploadDir.js";
+import { saveFileToCloudinary } from "../utils/saveFileToCloudinary.js";
+import { env } from "../utils/env.js";
 
 
 export const getContactsController = async (req, res, next) => {
@@ -88,14 +91,40 @@ export const patchContactController = async (req, res, next) => {
     const { contactId } = req.params;
     const { body } = req;
     const { _id: userId } = req.user;  
+    const photo = req.file;
 
-    const contacts = await updateContact(contactId, userId, body);  
+    try {
+        
+        const existingContact = await getContactsById(contactId, userId);
+        if (!existingContact) {
+            return next(createHttpError(404, "Contact not found or you do not have permission to update this contact"));
+        }
 
-    res.status(200).json({
-        status: 200,
-        message: "Successfully patched a contact!",
-        data: contacts,
-    });
+        
+        const updatedContact = await updateContact(contactId, userId, body);
+
+        if (photo) {
+            let photoUrl;
+            if (env('ENABLE_CLOUDINARY') === 'true') {
+                photoUrl = await saveFileToCloudinary(photo);  
+            } else {
+                photoUrl = await saveFileToUploadDir(photo);  
+            }
+            updatedContact.photo = photoUrl;
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: "Successfully patched a contact!",
+            data: updatedContact,
+        });
+
+    } catch (error) {
+        next(createHttpError(500, "Failed to patch the contact", { cause: error }));
+    }
 };
+
+
+
 
 

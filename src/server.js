@@ -6,6 +6,7 @@ import router from "./routers/index.js";
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import cookieParser from 'cookie-parser';
+import { UPLOAD_DIR } from './constants/index.js';
 
 const setupServer = () => {
   const app = express();
@@ -15,7 +16,7 @@ const setupServer = () => {
       target: 'pino-pretty',
     },
   });
-
+  app.use('/uploads', express.static(UPLOAD_DIR));
   app.use(logger);
   app.use(cors());
   app.use(cookieParser());
