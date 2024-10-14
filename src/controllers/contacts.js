@@ -72,18 +72,30 @@ export const deleteContactByIdController = async (req, res, next) => {
 };
 
 
-export const createContactController = async (req, res) => {
-    const { _id: userId } = req.user;  
-    const payload = { ...req.body, userId };  
+export const createContactController = async (req, res, next) => {
+    const { _id: userId } = req.user;
+    const payload = { ...req.body, userId };
+    const photo = req.file;
 
-    const newContact = await createContact(payload);
-
-    res.status(201).json({
-        status:201,
-        message: "Successfully created a contact!",
-        data: newContact,
+    try {
+        const newContact = await createContact(payload);
+        if (photo) {
+            let photoUrl;
+            if (env('ENABLE_CLOUDINARY') === 'true') {
+                photoUrl = await saveFileToCloudinary(photo);
+            } else {
+                photoUrl = await saveFileToUploadDir(photo);
+            }
+            newContact.photo = photoUrl;
+        }
+        res.status(201).json({
+            status: 201,
+            message: "Successfully created a contact!",
+            data: newContact,
+        });
+    } catch (error) {
+        next(createHttpError(500, "Failed to create the contact", { cause: error }));
     }
-    );
 };
 
 
