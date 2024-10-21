@@ -9,33 +9,22 @@ info:
 tags:
   - name: Contacts
     description: Операції з контактами
-  - name: Auth
-    description: Операції з авторизації
 servers:
   - url: http://localhost:3000
   - url: https://example.com/api/v1
 paths:
   /contacts:
-    get:
+    get: 
       $ref: ../swagger/paths/contacts/get.yaml
     post:
       $ref: ../swagger/paths/contacts/post.yaml
   /contacts/{contactId}:
+    delete: 
+      $ref: ../swagger/paths/contacts/{Id}/delete.yaml
     get:
       $ref: ../swagger/paths/contacts/{Id}/get.yaml
-    patch:
+    patch: 
       $ref: ../swagger/paths/contacts/{Id}/patch.yaml
-    delete:
-      $ref: ../swagger/paths/contacts/{Id}/delete.yaml
-  /auth/register:
-    post:
-      $ref: ../swagger/paths/auth/register/post.yaml
-  /auth/login:
-    post:
-      $ref: ../swagger/paths/auth/login/post.yaml
-  /auth/logout:
-    post:
-      $ref: ../swagger/paths/auth/logout/post.yaml
 components:
   securitySchemes:
     bearerAuth:

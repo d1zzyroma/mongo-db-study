@@ -1,24 +1,77 @@
+#/swagger/paths/students/post.yaml
+
 tags:
   - Contacts
-summary: Create a new contact
+summary: Create contact
 operationId: createContact
-description: Creates a new contact with the provided information.
+description: 'Create a student with payload'
 security:
   - bearerAuth: []
 requestBody:
-  required: true
   content:
     multipart/form-data:
       schema:
-        $ref: ..\..\components\schemas\newContact.yaml
+        type: object
+        required:
+          - name
+          - age
+          - gender
+          - avgMark
+          - parentId
+        properties:
+          _id:
+            description: "Contact's id"
+            type: string
+            example: 65e4decdd286b30065d54af9
+          name:
+            description: "Contact's name"
+            type: string
+            example: 'John Doe'
+          phoneNumber:
+            description: "Contact's phone number"
+            type: string
+            example: '+1-234-567-890'
+          email:
+            description: "Contact's email address"
+            type: string
+            example: john.doe@example.com
+          isFavourite:
+            description: "Indicates whether the contact is marked as a favourite (true or false)"
+            type: boolean
+            example: true
+          contactType:
+            description: 'The type of contact (work, home, personal)'
+            type: string
+            enum: ['work', 'home', 'personal']
+          userId:
+            description: "The ID of the user who owns the contact"
+            type: string
+            example: 65e4decdd286b30065d54af9
+          photo:
+            description: "Link to the contact's photo"
+            type: string
+            example: https://res.cloudinary.com/uqwgdu/image/upload/image.png
 responses:
-  201:
-    description: Contact created successfully.
+  '201':
+    description: Creates a contact
     content:
       application/json:
         schema:
-          $ref: ..\..\components\schemas\contact.yaml
-  400:
-    description: Bad request
-  401:
-    description: Unauthorized
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: Successfully created a contact!
+            data:
+              type: object
+              $ref: ..\..\components\schemas\contact.yaml
+  '401':
+    $ref: '../../components/responses/401.yaml'
+

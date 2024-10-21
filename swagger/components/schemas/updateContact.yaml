@@ -1,15 +1,29 @@
 type: object
 properties:
   name:
+    description: "Contact's name"
     type: string
-    description: Name of the contact
+    minLength: 3
+    maxLength: 20
+    example: 'John Doe'
+  phoneNumber:
+    description: "Contact's phone number"
+    type: string
+    minLength: 3
+    maxLength: 20
+    example: '+1-234-567-890'
   email:
+    description: "Contact's email address"
     type: string
-    description: Email of the contact
-  phone:
+    format: email
+    example: 'john.doe@example.com'
+  isFavourite:
+    description: "Indicates whether the contact is marked as a favourite (true or false)"
+    type: boolean
+    example: true
+  contactType:
+    description: 'The type of contact (work, home, personal)'
     type: string
-    description: Phone number of the contact
-  photo:
-    type: string
-    format: binary
-    description: Contact photo (optional)
+    enum: ['work', 'home', 'personal']
+    example: 'home'
+required: []  # Жодне поле не є обов'язковим
