@@ -1,0 +1,15 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Name of the contact
+  email:
+    type: string
+    description: Email of the contact
+  phone:
+    type: string
+    description: Phone number of the contact
+  photo:
+    type: string
+    format: binary
+    description: Contact photo (optional)

@@ -1,0 +1,25 @@
+type: object
+properties:
+  _id:
+    type: string
+    description: Unique identifier for the contact
+  name:
+    type: string
+    description: Name of the contact
+  email:
+    type: string
+    description: Email of the contact
+  phone:
+    type: string
+    description: Phone number of the contact
+  photoUrl:
+    type: string
+    description: URL of the contact's photo
+  createdAt:
+    type: string
+    format: date-time
+    description: Date when the contact was created
+  updatedAt:
+    type: string
+    format: date-time
+    description: Date when the contact was last updated

@@ -1,0 +1,33 @@
+tags:
+  - Contacts
+summary: Update an existing contact
+operationId: updateContact
+description: Update the details of a contact.
+security:
+  - bearerAuth: []
+parameters:
+  - name: contactId
+    in: path
+    required: true
+    description: ID of the contact to update
+    schema:
+      type: string
+requestBody:
+  required: true
+  content:
+    multipart/form-data:
+      schema:
+        $ref: ..\..\..\components\schemas\updateContact.yaml
+responses:
+  200:
+    description: Contact updated successfully
+    content:
+      application/json:
+        schema:
+          $ref: ..\..\..\components\schemas\contact.yaml
+  404:
+    description: Contact not found
+    content:
+      application/json:
+        schema:
+          $ref: ..\..\..\components\schemas\error.yaml

@@ -1,0 +1,54 @@
+post:
+  tags:
+    - Auth
+  summary: Login user
+  operationId: loginUser
+  description: Login the user by verifying their credentials and returning a JWT token.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            email:
+              type: string
+              format: email
+              example: "user@example.com"
+            password:
+              type: string
+              format: password
+              example: "user123"
+  responses:
+    '200':
+      description: User logged in successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                example: "JWT token"
+              user:
+                $ref: '../../../components/schemas/schemas.yaml#/User'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Invalid credentials"
+    '400':
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Email and password are required"
