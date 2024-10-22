@@ -14,7 +14,7 @@
       "url": "http://localhost:3000"
     },
     {
-      "url": "https://example.com/api/v1"
+      "url": "https://mongo-db-study-9.onrender.com"
     }
   ],
   "tags": [
@@ -176,11 +176,6 @@
                   "parentId"
                 ],
                 "properties": {
-                  "_id": {
-                    "description": "Contact's id",
-                    "type": "string",
-                    "example": "65e4decdd286b30065d54af9"
-                  },
                   "name": {
                     "description": "Contact's name",
                     "type": "string",
@@ -210,15 +205,9 @@
                       "personal"
                     ]
                   },
-                  "userId": {
-                    "description": "The ID of the user who owns the contact",
-                    "type": "string",
-                    "example": "65e4decdd286b30065d54af9"
-                  },
                   "photo": {
-                    "description": "Link to the contact's photo",
                     "type": "string",
-                    "example": "https://res.cloudinary.com/uqwgdu/image/upload/image.png"
+                    "format": "binary"
                   }
                 }
               }
@@ -288,27 +277,7 @@
         "responses": {
           "204": {
             "description": "Contact successfully deleted",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 204
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Contact successfully deleted."
-                    }
-                  }
-                }
-              }
-            }
+            "content": {}
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -405,9 +374,35 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/updateContact"
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "phoneNumber": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "isFavourite": {
+                    "type": "boolean"
+                  },
+                  "contactType": {
+                    "type": "string",
+                    "enum": [
+                      "work",
+                      "home",
+                      "personal"
+                    ]
+                  },
+                  "photo": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
               }
             }
           }
@@ -471,11 +466,6 @@
           "userId"
         ],
         "properties": {
-          "_id": {
-            "description": "Contact's id",
-            "type": "string",
-            "example": "65e4decdd286b30065d54af9"
-          },
           "name": {
             "description": "Contact's name",
             "type": "string",
@@ -505,58 +495,13 @@
               "personal"
             ]
           },
-          "userId": {
-            "description": "The ID of the user who owns the contact",
-            "type": "string",
-            "example": "65e4decdd286b30065d54af9"
-          },
           "photo": {
-            "description": "Link to the contact's photo",
+            "description": "Contact's photo file",
             "type": "string",
-            "example": "https://res.cloudinary.com/uqwgdu/image/upload/image.png"
+            "format": "binary",
+            "example": null
           }
         }
-      },
-      "updateContact": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "Contact's name",
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 20,
-            "example": "John Doe"
-          },
-          "phoneNumber": {
-            "description": "Contact's phone number",
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 20,
-            "example": "+1-234-567-890"
-          },
-          "email": {
-            "description": "Contact's email address",
-            "type": "string",
-            "format": "email",
-            "example": "john.doe@example.com"
-          },
-          "isFavourite": {
-            "description": "Indicates whether the contact is marked as a favourite (true or false)",
-            "type": "boolean",
-            "example": true
-          },
-          "contactType": {
-            "description": "The type of contact (work, home, personal)",
-            "type": "string",
-            "enum": [
-              "work",
-              "home",
-              "personal"
-            ],
-            "example": "home"
-          }
-        },
-        "required": []
       }
     },
     "responses": {

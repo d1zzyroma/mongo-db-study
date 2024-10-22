@@ -26,4 +26,9 @@ properties:
     type: string
     enum: ['work', 'home', 'personal']
     example: 'home'
-required: []  # Жодне поле не є обов'язковим
+  photo:
+    description: "Contact's photo file"
+    type: string
+    format: binary 
+    example: null
+required: []  

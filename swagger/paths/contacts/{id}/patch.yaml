@@ -15,9 +15,24 @@ parameters:
 requestBody:
   required: true
   content:
-    application/json:
+    multipart/form-data:  # Використовуємо формат для завантаження файлів
       schema:
-        $ref: "../../../components/schemas/updateContact.yaml"  # посилання на схему для оновлення контакту
+        type: object
+        properties:
+          name:
+            type: string
+          phoneNumber:
+            type: string
+          email:
+            type: string
+          isFavourite:
+            type: boolean
+          contactType:
+            type: string
+            enum: ['work', 'home', 'personal']
+          photo:
+            type: string
+            format: binary  
 responses:
   '200':
     description: 'Successfully updated contact'
@@ -37,7 +52,7 @@ responses:
               type: string
               example: "Successfully updated contact."
             data:
-              $ref: '../../../components/schemas/contact.yaml'  # посилання на схему контакту
+              $ref: '../../../components/schemas/contact.yaml'
   '401':
     $ref: '../../../components/responses/401.yaml'
   '404':
